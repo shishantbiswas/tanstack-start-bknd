@@ -1,7 +1,7 @@
+// Both work just fine
+// import { getApp as getBkndApp } from "bknd/adapter/react-router";
 import { getApp as getBkndApp } from "bknd/adapter/nextjs";
 import config from "../bknd.config";
-
-// import { headers } from "next/headers";
 
 export async function getApi({
   headers,
@@ -20,5 +20,3 @@ export async function getApi({
 
   return app.getApi();
 }
-
-export { config };
