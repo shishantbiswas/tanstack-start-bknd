@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import config from "../../bknd.config";
-import { BkndConfig, createFrameworkApp } from "bknd/adapter";
+import { createFrameworkApp, type FrameworkBkndConfig } from "bknd/adapter";
 
 // import { getApp } from "bknd/adapter/nextjs";
 // const handler = serve({
@@ -10,13 +10,13 @@ import { BkndConfig, createFrameworkApp } from "bknd/adapter";
 // --------------------------------- TANSTACK ADAPTER PROTOTYPE -----------------------------------
 
 export async function getApp<Env = NodeJS.ProcessEnv>(
-  config: BkndConfig<Env>,
+  config: FrameworkBkndConfig<Env>,
   args: Env = process.env as Env,
 ) {
   return await createFrameworkApp(config, args);
 }
 
-function serve(config: BkndConfig) {
+function serve(config: FrameworkBkndConfig) {
   return async (request: Request) => {
     const app = await getApp(config, process.env);
     return app.fetch(request);

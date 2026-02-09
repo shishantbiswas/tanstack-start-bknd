@@ -5,27 +5,39 @@ import { registerLocalMediaAdapter } from "bknd/adapter/node";
 
 const local = registerLocalMediaAdapter();
 
-
-// --------------------- SCHEMA -----------------------
-// this just for testing
 const schema = em({
   todos: entity("todos", {
     title: text(),
     done: boolean(),
   }),
-  post:entity("posts",{
-    title: text(),
-    content: text(),
-  })
 });
 
-// --------------------- SCHEMA END -----------------------
+// register your schema to get automatic type completion
+type Database = (typeof schema)["DB"];
+declare module "bknd" {
+  interface DB extends Database {}
+}
 
 export default {
   connection: {
-    url: "data.db",
+    url: process.env.DB_URL ?? "file:data.db",
   },
-  options: {},
+  options: {
+    // the seed option is only executed if the database was empty
+    seed: async (ctx) => {
+      // create some entries
+      await ctx.em.mutator("todos").insertMany([
+        { title: "Learn bknd", done: true },
+        { title: "Build something cool", done: false },
+      ]);
+
+      // and create a user
+      await ctx.app.module.auth.createUser({
+        email: "test@bknd.io",
+        password: "12345678",
+      });
+    },
+  },
   config: {
     data: schema.toJSON(),
     auth: { enabled: true },
