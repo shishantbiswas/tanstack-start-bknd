@@ -5,6 +5,7 @@ import { Admin } from "bknd/ui";
 
 
 export const Route = createFileRoute("/admin/$")({
+  ssr: false,
   component: RouteComponent,
 });
 
