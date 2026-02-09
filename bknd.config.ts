@@ -1,4 +1,4 @@
-import { type BkndConfig, em, entity, text, boolean } from "bknd";
+import { type BkndConfig, em, entity, text, boolean, libsql } from "bknd";
 
 // Unrelated to framework adapters
 import { registerLocalMediaAdapter } from "bknd/adapter/node";
@@ -19,9 +19,9 @@ declare module "bknd" {
 }
 
 export default {
-  connection: {
-    url: process.env.DB_URL ?? "file:data.db",
-  },
+  connection: libsql({
+    url: process.env.DATABASE_URL || "http://localhost:8080",
+  }),
   options: {
     // the seed option is only executed if the database was empty
     seed: async (ctx) => {
@@ -33,7 +33,7 @@ export default {
 
       // and create a user
       await ctx.app.module.auth.createUser({
-        email: "test@bknd.io",
+        email: "dswbx@bknd.io",
         password: "12345678",
       });
     },

@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+    expose:
+      - 3000
+    environment:
+      DATABASE_URL: http://db:8080
+    depends_on:
+      - db
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - "./data:/app/data"
+  db:
+    image: ghcr.io/tursodatabase/libsql-server
+    volumes:
+      - libsql:/var/lib/sqld
+
+volumes:
+  libsql:
